@@ -1,6 +1,13 @@
 # Week 0 — Billing and Architecture
 ## Week 0 tasks documentation.
-This week, I was able to create accounts on gitpod, rollbar, AWS account, honeycomb.io, 
+This week, I was able to create accounts on gitpod, rollbar, AWS Free-tier account, honeycomb.io, Github codespaces, and the Bootcamp's repository template.
+
+## The project's Napkin Design
+Below is an image of the project's napkin design rendered on lucidchart
+![napkin-design-image](../_docs/assets/napkin-design.png "napkin-design-image")
+
+## The project's Logical design
+![logical-design-image](../_docs/assets/project-logical-design.png "logical-design-image")
 
 ## Creation of a user in the admin group
 In practise, root accounts are not used to do regular tasks on AWS account. There is a need to create another IAM user that will carry out admin responsibilities. 
@@ -64,6 +71,10 @@ gp env AWS_DEFAULT_REGION="ca-central-1"
 ```
 This is to enable gitpod use it's environment file to save our credentials so that anytime we log into the account, after the .yml script has run, the credentials saved in its environment will also be applied to authenticate the user.
 
+## Enabling Admin User account access to Billing Dashboard
+To enable the user created for admin roles to have access to the billings dashboard, Log into the root user account, on the navigation pane, click on account name, then account to access the `IAM User and Role Access to Billing Information` section. Select the `Activate IAM Access` and click on update to activate. This gives the admin user access to view the Billing Dashboard.
+
+
 ## Creating an AWS Budget
 From the AWS CLI documentation page, navigate to `budgets`, then `Create budget` in the available commands section. 
 
@@ -111,3 +122,29 @@ aws budgets create-budget \
 
 Having set the AWS_ACCOUNT_ID as an environment variable and updating the file path to the json files, Copy and paste this code on terminal and run it. It shouldn't give any error.
 
+This is what I have on the console after running the command:
+![budget-creation-image](../_docs/assets/budget-creation.png "budget-creation-image")
+
+## Creating a Billing Alarm through SNS
+Use the following command on the terminal
+```
+aws sns create-topic --name billing-alarm`
+```
+The next step is to copy this lines of code, edit accordingly and paste on the terminal.
+```
+aws sns subscribe \
+    --topic-arn="sns-generated"\
+    --protocol=email \
+    --notification-endpoint=domain@email.com
+```
+This will create an sns that requires confirmation which will be done from the email account.
+Also, note that you should search for the SNS service on the console and log into the region. 
+
+## Creating Alarm (on CloudWatch) through the CLI
+A json file [alarm-creation.json](../aws/json/alarm_config.json) was created and updated and on the CLI, this command was executed.
+
+```
+aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm_config.json
+```
+This created a CloudWatch alarm as seen below:
+![alarm-creation-image](../_docs/assets/alarm-creation.png "alarm-creation-image")
