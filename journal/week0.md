@@ -1,18 +1,26 @@
 # Week 0 — Billing and Architecture
 ## Week 0 tasks documentation.
-This week, I was able to create accounts on gitpod, rollbar, AWS Free-tier account, honeycomb.io, Github codespaces, and the Bootcamp's repository template.
+This week, I was able to create accounts on gitpod, rollbar, AWS Free-tier account, honeycomb.io, Github codespaces, and Bootcamp's repository template.
+<br>
 
-## The project's Napkin Design
-Below is an image of the project's napkin design rendered on lucidchart
+## The project's Napkin/Conceptual Design
+Below is an image of the project's conceptual design rendered on lucidchart
 ![napkin-design-image](../_docs/assets/napkin-design.png "napkin-design-image")
+[Link to my lucidchart's conceptual design](https://lucid.app/lucidchart/9d10a25a-6961-45cd-87d2-648c1ddd5b14/edit?viewport_loc=-2105%2C-1518%2C3072%2C1749%2C0_0&invitationId=inv_8a6f6195-ef38-41dc-a3a1-7c82a4fa0777)
+<br>
 
 ## The project's Logical design
 ![logical-design-image](../_docs/assets/project-logical-design.png "logical-design-image")
+[link to my lucidchart's logical design](https://lucid.app/lucidchart/59f6742a-f4e8-4fce-b430-3e3e955b77c2/edit?viewport_loc=-116%2C105%2C2048%2C1166%2C0_0&invitationId=inv_dc9eea04-d96c-4829-8c8e-ac872b9c86ba)
+<br>
+
 
 ## Creation of a user in the admin group
 In practise, root accounts are not used to do regular tasks on AWS account. There is a need to create another IAM user that will carry out admin responsibilities. 
 
 To do that, we logged into the console and created a user with custom password, and we also generated security credentials that will enable access to the AWS CLI. We generated an access key and a secret access key for this IAM user.
+<br>
+<br>
 
 ## Installing AWS CLI 
 From the AWS-bootcamp-cruddur-2023 template that was forked on github, I used the gitpod button to launch the code editor. I navigated to the `.gitpod.yml` file to update the tasks to be carried out for the installation of the AWS CLI.
@@ -45,6 +53,8 @@ And to confirm if the credentials adding process was successful, I used the comm
 aws sts get-caller-identity
 ``` 
 This will output the UserId, Account, and ARN of the admin user.
+<br>
+<br>
 
 ## Getting the credentials to be permanently stored
 If we close the gitpod browser to restart, we will have to input the credentials again, this is because the data stored were done permanently. 
@@ -70,10 +80,13 @@ Then on the terminal, we exchanged the word `export` with `gp env` like so:
 gp env AWS_DEFAULT_REGION="ca-central-1"
 ```
 This is to enable gitpod use it's environment file to save our credentials so that anytime we log into the account, after the .yml script has run, the credentials saved in its environment will also be applied to authenticate the user.
+<br>
+<br>
 
 ## Enabling Admin User account access to Billing Dashboard
 To enable the user created for admin roles to have access to the billings dashboard, Log into the root user account, on the navigation pane, click on account name, then account to access the `IAM User and Role Access to Billing Information` section. Select the `Activate IAM Access` and click on update to activate. This gives the admin user access to view the Billing Dashboard.
-
+<br>
+<br>
 
 ## Creating an AWS Budget
 From the AWS CLI documentation page, navigate to `budgets`, then `Create budget` in the available commands section. 
@@ -124,6 +137,8 @@ Having set the AWS_ACCOUNT_ID as an environment variable and updating the file p
 
 This is what I have on the console after running the command:
 ![budget-creation-image](../_docs/assets/budget-creation.png "budget-creation-image")
+<br>
+<br>
 
 ## Creating a Billing Alarm through SNS
 Use the following command on the terminal
@@ -139,6 +154,8 @@ aws sns subscribe \
 ```
 This will create an sns that requires confirmation which will be done from the email account.
 Also, note that you should search for the SNS service on the console and log into the region. 
+<br>
+<br>
 
 ## Creating Alarm (on CloudWatch) through the CLI
 A json file [alarm-creation.json](../aws/json/alarm_config.json) was created and updated and on the CLI, this command was executed.
