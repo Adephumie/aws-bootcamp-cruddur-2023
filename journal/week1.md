@@ -221,13 +221,50 @@ By running `docker-compose up`, and checking the ports tab, I found two services
 3. Click on the `Join Now!` tab to access the sign up page, input your info and click on the `Sign Up` tab.
 4. This will take you into the `Confirm your Email` page. Enter the email you used in signing up and use the hardcoded confirmation code, `1234` to gain access. This brings up the authentication page as shown below:
 
-![authentication-page](../images-resource/week-1/authentication-page.png)
+![authentication-page](../images-resource/week-1/authentication-page.png "authentication-page")
 
 ### <b>Setting up Notification Feature</b>
 To learn more about it, the [OpenAPI documentation](https://spec.openapis.org/oas/v3.1.0) gives detailed explanation. 
 
-For this, we will be adding an endpoint for the notifications tab.
+1. For this, we will be adding an endpoint for the notifications tab. In the [openapi.yaml](../backend-flask/openapi-3.0.yml) file, we added this lines:
+```
+/api/activities/notifications:
+    get:
+      description: 'Return a feed of activity for all that I follow'
+      tags:
+        - activities
+      parameters: []
+      responses:
+        '200':
+          description: Returns and array of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
 
+```
+
+2. We will go into the backend application to define an end point for the notifications. The entry point for the app is `app.py`.
+
+Inside the [app.py](../backend-flask/app.py) file, I added these code lines for the notifications features:
+
+```
+@app.route("/api/activities/notifications", methods=['GET'])
+def data_notifications():
+  data = NotificationsActivities.run()
+  return data, 200
+```
+
+3. In the [backend-flask-service-folder](../backend-flask/services/notifications_activities.py), I created another `.py` file. Then add this line to the app.py file:
+
+```
+from services.notifications_activities import *
+```
+Then we populated the data as we wanted as seen in the [notifications-file](../backend-flask/services/notifications_activities.py). The endpoint address of `/api/activities/notifications` that was added to the backend's url gave the image below:
+
+![notifications-endpoint](../images-resource/week-1/notifications-endpoint.png "notifications-endpoint")
 
 
 
