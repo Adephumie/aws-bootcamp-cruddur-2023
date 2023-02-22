@@ -267,6 +267,26 @@ Then we populated the data as we wanted as seen in the [notifications-file](../b
 ![notifications-endpoint](../images-resource/week-1/notifications-endpoint.png "notifications-endpoint")
 
 ### <b>Setting up the Frontend Notification Feature</b>
+1. In the [App.js](../frontend-react-js/src/App.js) file, we added:
+```
+import NotificationsFeedPage from './pages/NotificationsFeedPage';
+```
+and 
+```
+{
+    path: "/notifications",
+    element: <NotificationsFeedPage />
+  },
+```
+To the existing code in the appropriate sections.
+
+2. Then, we created the `./pages/NotificationsFeedPage` pages which includes the [.js](../frontend-react-js/src/pages/NotificationsFeedPage.js) and [.css](../frontend-react-js/src/pages/NotificationsFeedPage.css) extensions.
+
+Clicking the notifications tab of the frontend gave this image:
+![notifications-frontend-image](../images-resource/week-1/notifications-frontend.png "notifications-frontend-image")
+
+
+
 
 
 
