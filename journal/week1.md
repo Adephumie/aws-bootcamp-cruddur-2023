@@ -213,6 +213,22 @@ docker-compose up
 By running `docker-compose up`, and checking the ports tab, I found two services running together, the frontend and backend. After unlocking the ports and clicking on the URL for the front end, I got this output on the browser page.
 ![frontend-and-backend-containers-running](../images-resource/week-1/docker-compose-output.png "frontend-and-backend-containers-running")
 
+## <b>Creating the Notification Feature (Backend and Frontend)</b>
+
+### <b>Authentication process</b>
+1. Start up the app with `docker copmose up` command.
+2. Open the prots tabs, make the ports public by unlocking them, then lauch in the brower.
+3. Click on the `Join Now!` tab to access the sign up page, input your info and click on the `Sign Up` tab.
+4. This will take you into the `Confirm your Email` page. Enter the email you used in signing up and use the hardcoded confirmation code, `1234` to gain access. This brings up the authentication page as shown below:
+
+![authentication-page](../images-resource/week-1/authentication-page.png)
+
+### <b>Setting up Notification Feature</b>
+To learn more about it, the [OpenAPI documentation](https://spec.openapis.org/oas/v3.1.0) gives detailed explanation. 
+
+For this, we will be adding an endpoint for the notifications tab.
+
+
 
 
 
