@@ -211,7 +211,12 @@ OR
 docker-compose up
 ```
 By running `docker-compose up`, and checking the ports tab, I found two services running together, the frontend and backend. After unlocking the ports and clicking on the URL for the front end, I got this output on the browser page.
+<br>
+<br>
+
 ![frontend-and-backend-containers-running](../images-resource/week-1/docker-compose-output.png "frontend-and-backend-containers-running")
+<br>
+<br>
 
 ## <b>Creating the Notification Features (Backend and Frontend)</b>
 
@@ -227,6 +232,7 @@ By running `docker-compose up`, and checking the ports tab, I found two services
 To learn more about it, the [OpenAPI documentation](https://spec.openapis.org/oas/v3.1.0) gives detailed explanation. 
 
 1. For this, we will be adding an endpoint for the notifications tab. In the [openapi.yaml](../backend-flask/openapi-3.0.yml) file, we added this lines:
+
 ```
 /api/activities/notifications:
     get:
@@ -256,6 +262,8 @@ def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
 ```
+<br>
+<br>
 
 3. In the [backend-flask-service-folder](../backend-flask/services/notifications_activities.py), I created another `.py` file. Then add this line to the app.py file:
 
@@ -265,6 +273,8 @@ from services.notifications_activities import *
 Then we populated the data as we wanted as seen in the [notifications-file](../backend-flask/services/notifications_activities.py). The endpoint address of `/api/activities/notifications` that was added to the backend's url gave the image below:
 
 ![notifications-endpoint](../images-resource/week-1/notifications-endpoint.png "notifications-endpoint")
+<br>
+<br>
 
 ### <b>Setting up the Frontend Notification Feature</b>
 1. In the [App.js](../frontend-react-js/src/App.js) file, we added:
@@ -283,8 +293,87 @@ To the existing code in the appropriate sections.
 2. Then, we created the `./pages/NotificationsFeedPage` pages which includes the [.js](../frontend-react-js/src/pages/NotificationsFeedPage.js) and [.css](../frontend-react-js/src/pages/NotificationsFeedPage.css) extensions.
 
 Clicking the notifications tab of the frontend gave this image:
+<br>
+<br>
+
 ![notifications-frontend-image](../images-resource/week-1/notifications-frontend.png "notifications-frontend-image")
 
+
+## <b>Adding Postgres and DynamoDM local</b>
+We began by adding these lines of codes to the [docker-compose.yml file](../docker-compose.yml).
+
+```
+dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+```
+
+The volume was added with the code:
+
+```
+volumes:
+  db:
+    driver: local
+```
+At the network section.
+
+To test the setup, we used some data from this [dynamodb-local repo](https://github.com/100DaysOfCloud/challenge-dynamodb-local) on the AWS CLI to create a table, create an item, list tables, and Get records.
+
+We had to edit the code to get records. We added the name of the table we created.
+```
+aws dynamodb scan --table-name Music --query "Items" --endpoint-url http://localhost:8000
+```
+
+To install the postgres client into gitpod, we added these lines to the `.gitpod.yml file`:
+
+```
+- name: postgres
+    init: |
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      sudo apt update
+      sudo apt install -y postgresql-client-13 libpq-dev
+```
+
+Then, we will run the commands on the terminal to install the postgres client.
+
+To access the Postgres CLI, use:
+
+```
+psql -Upostgres --host localhost 
+```
+
+password is `password`, these credentials will drop us into the Postgres SQL CLI.
+
+Then we also installed the postgres extension on Vscode. Right-click on it's settings to click on `Add to .gitpod.yml` option.
+
+
+
+
+## <b>Issues encountered</b>
+1. When I tested to see if my AWS CLI was active I found that it was giving not installed error. So, I reinstalled the CLI and when I ran the `aws sts get-caller-identity` command, it worked and brought out my credentials.
+
+2. 
 
 
 
